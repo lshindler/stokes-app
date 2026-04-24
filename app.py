@@ -9,7 +9,7 @@ pwd = st.sidebar.text_input("Password Progetto", type="password")
 
 if pwd != "Angelica2026": # CAMBIA QUI LA TUA PASSWORD
     st.title("🏛️ Heritage-Air Manager")
-    st.info("Benvenuto. Inserisci la password nella sidebar per accedere ai calcoli del modello Shindler.")
+    st.info("Benvenuto. Inserisci la password nella sidebar per accedere ai calcoli del modello Fabbri/Shindler.")
     st.stop()
 
 # --- APP PRINCIPALE (Se la password è corretta) ---
