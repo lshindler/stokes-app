@@ -21,7 +21,7 @@ vg_dust = st.sidebar.number_input(
 )
 
 # --- MAIN SECTION: SHINDLER MODEL (DUST) ---
-st.header("Shindler&Fabbri Model (Dusting Frequency)")
+st.header("🧹 Shindler Model (Dusting Frequency)")
 st.markdown("Calculate the exact cleaning interval based on indoor particulate matter accumulation.")
 
 # Layout with two clean columns for inputs and outputs
@@ -29,7 +29,7 @@ col_input, col_output = st.columns(2)
 
 with col_input:
     st.subheader("Model Inputs")
-    cin_pm = st.number_input("Indoor PM2.5 Concentration [µg/m³]", value=3.3)
+    cin_pm = st.number_input("Indoor PM2.5 Concentration (Cm) [µg/m³]", value=3.3)
     uvl_perc = st.slider("Unacceptable Visual Limit (UVL) [%]", 0.1, 1.0, 0.2)
 
 with col_output:
@@ -38,19 +38,22 @@ with col_output:
     if cin_pm > 0:
         uvl_dec = uvl_perc / 100
         
-        # Calculate dynamic k factor scaled for days (Eq. 23 & mass conversion from paper)
-        # Constants: D = 1.75e-6 m, rho_p = 1000 kg/m³
-        lambda_shindler = (3 * vg_dust) / (2 * 1.75e-6 * 1000)
-        k_dynamic = lambda_shindler * 1e-9 * 86400
+        # Exact formula from your paper: K = (3 * Cm * vg) / (2 * D * rho_p) * 10^-9
+        # Constants from paper: D = 1.75e-6 m, rho_p = 1000 kg/m³
+        d_param = 1.75e-6
+        rho_p = 1000
         
-        df_days = -np.log(1 - uvl_dec) / (k_dynamic * cin_pm)
+        k_soiling = (3 * cin_pm * vg_dust) / (2 * d_param * rho_p) * 1e-9
+        
+        # Convert the dynamic decay from seconds to days
+        df_days = -np.log(1 - uvl_dec) / (k_soiling * 86400)
         
         # Main results display
         st.metric("Dusting Frequency (DF)", f"{int(df_days)} days")
         st.success(f"📅 Recommended Cleaning Interval: {round(df_days/30, 1)} months")
         
-        # Technical transparency caption
-        st.caption(f"Calculated Kinetic Soiling Constant (k): {k_dynamic:.4e}")
+        # Technical transparency caption matches the paper definition exactly
+        st.caption(f"The Soiling Constant (K): {k_soiling:.4e} s⁻¹")
     else:
         st.error("Please enter an indoor concentration value greater than 0")
 
