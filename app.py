@@ -24,7 +24,7 @@ vg_dust = st.sidebar.slider(
 
 # --- MAIN SECTION: SHINDLER MODEL (DUST) ---
 st.header("🧹 Shindler&Fabbri Model (Dusting Frequency)")
-st.markdown("Calculate the exact cleaning interval based on indoor particulate matter accumulation.")
+st.markdown("Calculate the cleaning interval based on indoor particulate matter accumulation.")
 
 # Layout with two clean columns for inputs and outputs
 col_input, col_output = st.columns(2)
