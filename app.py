@@ -12,6 +12,16 @@ st.sidebar.header("Environmental Parameters")
 volume = st.sidebar.number_input("Room Volume [m³]", value=2200)
 superficie = st.sidebar.number_input("Storage Surface Area [m²]", value=590)
 
+# Dust Settling Velocity moved here and fully fixed
+vg_dust = st.sidebar.slider(
+    "Dust Settling Velocity (vg) [m/s]", 
+    min_value=0.00001, 
+    max_value=0.00005, 
+    value=0.000025, 
+    step=0.000001, 
+    format="%.6f"
+)
+
 # --- MAIN SECTION: SHINDLER MODEL (DUST) ---
 st.header("🧹 Shindler Model (Dusting Frequency)")
 st.markdown("Calculate the exact cleaning interval based on indoor particulate matter accumulation.")
@@ -23,9 +33,6 @@ with col_input:
     st.subheader("Model Inputs")
     cin_pm = st.number_input("Indoor PM2.5 Concentration [µg/m³]", value=3.3)
     uvl_perc = st.slider("Unacceptable Visual Limit (UVL) [%]", 0.1, 1.0, 0.2)
-    
-    # Dust Settling Velocity slider initialized with the paper's validated baseline
-    vg_dust = st.slider("Dust Settling Velocity (vg) [m/s]", 1.0e-5, 5.0e-5, 2.5e-5, format="%.2e")
 
 with col_output:
     st.subheader("Calculated Conservation Metrics")
@@ -57,3 +64,4 @@ st.sidebar.markdown(f'<a href="{email_link}" style="background-color: #3498db; c
 
 st.divider()
 st.caption("Model developed by: Shindler, L., & Fabbri, K. (2026). DOI: 10.1016/j.jobe.2024.110595")
+
